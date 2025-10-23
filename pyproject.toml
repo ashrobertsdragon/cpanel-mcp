@@ -20,10 +20,7 @@ requires-python = ">=3.10"
 version = "0.2.0"
 
 [dependency-groups]
-dev = [
-    "pytest>=8.4.2",
-    "pytest-cov>=7.0.0",
-]
+dev = ["pytest-cov>=7.0.0", "pytest>=8.4.2"]
 
 [tool.ruff]
 line-length = 79
@@ -43,12 +40,8 @@ follow_imports = "silent"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
+addopts = ["--cov-fail-under=80", "--cov-report=html:cov_html", "--cov=."]
 minversion = "6.2"
+pythonpath = ["src"]
 required_plugins = ["pytest-cov>4"]
 testpaths = ["tests"]
-pythonpath = ["src"]
-addopts = [
-    "--cov=server.py",
-    "--cov-fail-under=80",
-    "--cov-report=html:cov_html"
-]
