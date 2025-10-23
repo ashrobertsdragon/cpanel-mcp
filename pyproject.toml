@@ -1,14 +1,5 @@
 [project]
-name = "cpanel-mcp"
-version = "0.1.0"
-description = "An MCP server to interact with cPanel via API functions to manage email accounts"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "mcp[cli]>=1.11.0",
-]
-keywords = ["cpanel", "email account management", "mcp", "llm", "automation"]
-license = { text = "MIT" }
+
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -18,4 +9,46 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+]
+dependencies = ["mcp[cli]>=1.11.0"]
+description = "An MCP server to interact with cPanel via API functions to manage email accounts"
+keywords = ["automation", "cpanel", "email account management", "llm", "mcp"]
+license = { text = "MIT" }
+name = "cpanel-mcp"
+readme = "README.md"
+requires-python = ">=3.10"
+version = "0.2.0"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests,docs,tools,terraform}/*" = ["F401", "I001"]
+
+[tool.ruff.format]
+docstring-code-format = true
+line-ending = "lf"
+
+[tool.mypy]
+follow_imports = "silent"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+minversion = "6.2"
+required_plugins = ["pytest-cov>4"]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = [
+    "--cov=server.py",
+    "--cov-fail-under=80",
+    "--cov-report=html:cov_html"
 ]
