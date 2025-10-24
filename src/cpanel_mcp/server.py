@@ -195,7 +195,8 @@ class CpanelMCP:
         """Retrieves the settings for a given email account.
 
         Args:
-            email (str): The full email address for which to send client settings.
+            email (str): The full email address for which to send client
+                settings.
 
         Returns:
             dict: The JSON response from the api.
@@ -209,7 +210,8 @@ class CpanelMCP:
         """Changes the quota for a given email account.
 
         Args:
-            email (str): The full email address for which to send client settings.
+            email (str): The full email address for which to send client
+                settings.
             quota (int): The new acount limit.
 
         Returns:
@@ -226,7 +228,8 @@ class CpanelMCP:
         """Changes the password for a given email account.
 
         Args:
-            email (str): The full email address for which to send client settings.
+            email (str): The full email address for which to send client
+                settings.
             new_password (str): The password to change to.
 
         Returns:
@@ -249,7 +252,8 @@ class CpanelMCP:
         """Create an email forwarder.
 
         Args:
-            email (str): The full email address for which to send client settings.
+            email (str): The full email address for which to send client
+                settings.
             destination (str): The full email address to forward email to.
 
         Returns:
@@ -273,7 +277,8 @@ class CpanelMCP:
         """Delete an email forwarder.
 
         Args:
-            email (str): The full email address for which to send client settings.
+            email (str): The full email address for which to send client
+                settings.
             destination (str): The full email address to forward email to.
 
         Returns:

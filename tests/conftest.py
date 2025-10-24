@@ -67,6 +67,7 @@ def mock_httpx_client():
 @pytest.fixture
 def mock_response(*args, **kwargs):
     """Provides a function that creates a MockResponse with given args."""
+
     def _make_mock_response(*args, **kwargs):
         return MockResponse(*args, **kwargs)
 
@@ -107,7 +108,6 @@ def make_mock_api_call_tester(mock_httpx_client, mock_response):
         mock_httpx_client.get.reset_mock()
 
     return _tester
-
 
 
 @pytest.fixture()
