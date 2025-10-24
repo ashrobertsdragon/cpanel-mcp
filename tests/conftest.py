@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 from httpx import HTTPStatusError, Response
 
-import server
+import cpanel_mcp.server as server
 
 
 class MockResponse(Response):
@@ -35,27 +35,12 @@ def env_vars(monkeypatch):
     yield
 
 
-@pytest.fixture
-def mock_httpx_client():
-    """Mocks the httpx.Client and yields the mock client instance."""
-    with mock.patch.object(server.httpx, "Client") as m:
-        client = mock.Mock()
-        m.return_value = client
-        yield client
-
-
 @pytest.fixture(autouse=True)
 def reset_cpanelapi_singleton():
     """Ensures CpanelAPI singleton is reset between tests."""
     server.CpanelAPI._singleton = None
     yield
     server.CpanelAPI._singleton = None
-
-
-@pytest.fixture()
-def cpanelapi_no_singleton():
-    """Initializes a CpanelAPI instance."""
-    return server.CpanelAPI()
 
 
 @pytest.fixture
@@ -71,12 +56,31 @@ def expected_make_call_args():
 
 
 @pytest.fixture
-def make_mock_api_call_tester(mock_httpx_client):
+def mock_httpx_client():
+    """Mocks the httpx.Client and yields the mock client instance."""
+    with mock.patch.object(server.httpx, "Client") as m:
+        client = mock.Mock()
+        m.return_value = client
+        yield client
+
+
+@pytest.fixture
+def mock_response(*args, **kwargs):
+    """Provides a function that creates a MockResponse with given args."""
+    def _make_mock_response(*args, **kwargs):
+        return MockResponse(*args, **kwargs)
+
+    return _make_mock_response
+
+
+@pytest.fixture
+def make_mock_api_call_tester(mock_httpx_client, mock_response):
+    """Provides a function for testing API calls.
+
+    This fixture uses a mock httpx.Client and a mock response to test API
+    calls and asserts the result and the mock client call arguments.
     """
-    A helper fixture to test API tool functions by setting a mock response
-    and asserting the result and the mock client call arguments.
-    """
-    mock_httpx_client.get.return_value = MockResponse({"ok": 1})
+    mock_httpx_client.get.return_value = mock_response({"ok": 1})
 
     def _tester(
         func,
@@ -105,9 +109,14 @@ def make_mock_api_call_tester(mock_httpx_client):
     return _tester
 
 
-@pytest.fixture
-def mock_response(*args, **kwargs):
-    def _make_mock_response(*args, **kwargs):
-        return MockResponse(*args, **kwargs)
 
-    return _make_mock_response
+@pytest.fixture()
+def cpanelapi_no_singleton():
+    """Initializes a CpanelAPI instance."""
+    return server.CpanelAPI()
+
+
+@pytest.fixture
+def cpanel_mcp():
+    """Creates a CpanelMCP instance for testing."""
+    return server.CpanelMCP()

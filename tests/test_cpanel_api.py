@@ -3,7 +3,7 @@ from unittest import mock
 import httpx
 import pytest
 
-from server import CpanelAPI
+from cpanel_mcp.server import CpanelAPI
 
 
 @pytest.mark.parametrize(

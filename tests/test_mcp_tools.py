@@ -1,12 +1,10 @@
 import pytest
 
-import server
 
-
-def test_add_email_account_maps_params(make_mock_api_call_tester):
-    """Tests server.add_email_account parameter mapping to UAPI call."""
+def test_add_email_account_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.add_email_account parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.add_email_account,
+        cpanel_mcp.add_email_account,
         "u@d.com",
         "pw",
         quota=123,
@@ -21,10 +19,10 @@ def test_add_email_account_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_delete_email_account_maps_params(make_mock_api_call_tester):
-    """Tests server.delete_email_account parameter mapping to UAPI call."""
+def test_delete_email_account_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.delete_email_account parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.delete_email_account,
+        cpanel_mcp.delete_email_account,
         "u@d.com",
         expected_module="Email",
         expected_func="delete_pop",
@@ -32,10 +30,10 @@ def test_delete_email_account_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_list_email_accounts_maps_params(make_mock_api_call_tester):
-    """Tests server.list_email_accounts parameter mapping to UAPI call."""
+def test_list_email_accounts_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.list_email_accounts parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.list_email_accounts,
+        cpanel_mcp.list_email_accounts,
         "d.com",
         expected_module="Email",
         expected_func="list_pops",
@@ -43,10 +41,10 @@ def test_list_email_accounts_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_get_email_settings_maps_params(make_mock_api_call_tester):
-    """Tests server.get_email_settings parameter mapping to UAPI call."""
+def test_get_email_settings_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.get_email_settings parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.get_email_settings,
+        cpanel_mcp.get_email_settings,
         "u@d.com",
         expected_module="Email",
         expected_func="get_client_settings",
@@ -54,10 +52,10 @@ def test_get_email_settings_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_update_quota_maps_params(make_mock_api_call_tester):
-    """Tests server.update_quota parameter mapping to UAPI call."""
+def test_update_quota_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.update_quota parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.update_quota,
+        cpanel_mcp.update_quota,
         "u@d.com",
         10,
         expected_module="Email",
@@ -66,10 +64,10 @@ def test_update_quota_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_change_password_maps_params(make_mock_api_call_tester):
-    """Tests server.change_password parameter mapping to UAPI call."""
+def test_change_password_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.change_password parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.change_password,
+        cpanel_mcp.change_password,
         "u@d.com",
         "new",
         expected_module="Email",
@@ -78,10 +76,10 @@ def test_change_password_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_create_email_forwarder_maps_params(make_mock_api_call_tester):
-    """Tests server.create_email_forwarder parameter mapping to UAPI call."""
+def test_create_email_forwarder_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.create_email_forwarder parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.create_email_forwarder,
+        cpanel_mcp.create_email_forwarder,
         "u@d.com",
         "dest@x.com",
         expected_module="Email",
@@ -95,10 +93,10 @@ def test_create_email_forwarder_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_delete_email_forwarder_maps_params(make_mock_api_call_tester):
-    """Tests server.delete_email_forwarder parameter mapping to UAPI call."""
+def test_delete_email_forwarder_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.delete_email_forwarder parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.delete_email_forwarder,
+        cpanel_mcp.delete_email_forwarder,
         "u@d.com",
         "dest@x.com",
         expected_module="Email",
@@ -107,10 +105,10 @@ def test_delete_email_forwarder_maps_params(make_mock_api_call_tester):
     )
 
 
-def test_list_email_forwarders_maps_params(make_mock_api_call_tester):
-    """Tests server.list_email_forwarders parameter mapping to UAPI call."""
+def test_list_email_forwarders_maps_params(make_mock_api_call_tester, cpanel_mcp):
+    """Tests CpanelMCP.list_email_forwarders parameter mapping to UAPI call."""
     make_mock_api_call_tester(
-        server.list_email_forwarders,
+        cpanel_mcp.list_email_forwarders,
         "d.com",
         expected_module="Email",
         expected_func="list_forwarders",
