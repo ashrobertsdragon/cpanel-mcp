@@ -3,7 +3,10 @@ from unittest import mock
 import pytest
 from httpx import HTTPStatusError, Response
 
-import cpanel_mcp.server as server
+
+import cpanel_mcp.connectors.cpanel_api as cpanel_api_module
+from cpanel_mcp.connector import Connector
+from cpanel_mcp.cpanel_email import CpanelEmail
 
 
 class MockResponse(Response):
@@ -27,9 +30,9 @@ class MockResponse(Response):
 @pytest.fixture(autouse=True)
 def env_vars(monkeypatch):
     """Sets up base environment variables for the API."""
-    monkeypatch.setenv("USERNAME", "cpuser")
+    monkeypatch.setenv("CPANEL_USERNAME", "cpuser")
     monkeypatch.setenv("HOSTNAME", "cpanel.example.com")
-    monkeypatch.setenv("CPANEL_API_TOKEN", "tok123")
+    monkeypatch.setenv("API_TOKEN", "tok123")
     monkeypatch.delenv("PORT", raising=False)
     monkeypatch.delenv("SSL", raising=False)
     yield
@@ -38,9 +41,9 @@ def env_vars(monkeypatch):
 @pytest.fixture(autouse=True)
 def reset_cpanelapi_singleton():
     """Ensures CpanelAPI singleton is reset between tests."""
-    server.CpanelAPI._singleton = None
+    cpanel_api_module.CpanelAPI._singleton = None
     yield
-    server.CpanelAPI._singleton = None
+    cpanel_api_module.CpanelAPI._singleton = None
 
 
 @pytest.fixture
@@ -58,7 +61,7 @@ def expected_make_call_args():
 @pytest.fixture
 def mock_httpx_client():
     """Mocks the httpx.Client and yields the mock client instance."""
-    with mock.patch.object(server.httpx, "Client") as m:
+    with mock.patch.object(cpanel_api_module.httpx, "Client") as m:
         client = mock.Mock()
         m.return_value = client
         yield client
@@ -111,12 +114,12 @@ def make_mock_api_call_tester(mock_httpx_client, mock_response):
 
 
 @pytest.fixture()
-def cpanelapi_no_singleton():
+def cpanelapi():
     """Initializes a CpanelAPI instance."""
-    return server.CpanelAPI()
+    return cpanel_api_module.CpanelAPI()
 
 
 @pytest.fixture
 def cpanel_mcp():
     """Creates a CpanelMCP instance for testing."""
-    return server.CpanelMCP()
+    return CpanelEmail(Connector.API)

@@ -3,7 +3,7 @@ from unittest import mock
 import httpx
 import pytest
 
-from cpanel_mcp.server import CpanelAPI
+from cpanel_mcp.connectors.cpanel_api import CpanelAPI
 
 
 @pytest.mark.parametrize(
@@ -36,25 +36,23 @@ def test_build_config_variants(monkeypatch, port, ssl, expected_url):
     assert api._base_url == expected_url
 
 
-def test_headers_include_cpanel_auth(
-    cpanelapi_no_singleton, expected_make_call_args
-):
+def test_headers_include_cpanel_auth(cpanelapi, expected_make_call_args):
     """Tests that the API client includes the required headers."""
-    api = cpanelapi_no_singleton
+    api = cpanelapi
     assert api._headers == expected_make_call_args["headers"]
 
 
 def test_make_call_success(
     mock_httpx_client,
     mock_response,
-    cpanelapi_no_singleton,
+    cpanelapi,
 ):
     """Tests a successful make_call."""
     mock_httpx_client.get.return_value = mock_response({"result": "ok"})
     module = "Email"
     func = "add_pop"
     params_in = {"email": "user", "domain": "ex.com"}
-    api = cpanelapi_no_singleton
+    api = cpanelapi
 
     response = api.make_call(module, func, params_in)
 
@@ -66,7 +64,7 @@ def test_make_call_success(
 def test_make_call_builds_url_and_params(
     mock_httpx_client,
     mock_response,
-    cpanelapi_no_singleton,
+    cpanelapi,
     expected_make_call_args,
 ):
     """Verifies the client call arguments"""
@@ -74,7 +72,7 @@ def test_make_call_builds_url_and_params(
     module = "Email"
     func = "add_pop"
     params_in = {"email": "user", "domain": "ex.com"}
-    api = cpanelapi_no_singleton
+    api = cpanelapi
 
     api.make_call(module, func, params_in)
 
@@ -89,14 +87,12 @@ def test_make_call_builds_url_and_params(
     assert call_kwargs["params"] == params_in
 
 
-def test_make_call_handles_request_error(
-    mock_httpx_client, cpanelapi_no_singleton
-):
+def test_make_call_handles_request_error(mock_httpx_client, cpanelapi):
     """Tests error handling for httpx.RequestError (e.g., network failure)."""
     mock_httpx_client.get.side_effect = httpx.RequestError(
         "Network is unreachable"
     )
-    api = cpanelapi_no_singleton
+    api = cpanelapi
 
     response = api.make_call("Email", "x")
 
@@ -104,7 +100,7 @@ def test_make_call_handles_request_error(
 
 
 def test_make_call_handles_invalid_json(
-    mock_httpx_client, cpanelapi_no_singleton, mock_response
+    mock_httpx_client, cpanelapi, mock_response
 ):
     """Tests error handling when the response cannot be parsed as JSON."""
     bad_response = mock_response()
@@ -114,18 +110,18 @@ def test_make_call_handles_invalid_json(
 
     bad_response.json = bad_json
     mock_httpx_client.get.return_value = bad_response
-    api = cpanelapi_no_singleton
+    api = cpanelapi
 
     response = api.make_call("Email", "x")
     assert response == {"error": "Invalid JSON response from cPanel API."}
 
 
 def test_make_call_handles_http_error(
-    mock_httpx_client, cpanelapi_no_singleton, mock_response
+    mock_httpx_client, cpanelapi, mock_response
 ):
     """Tests error handling for HTTP status codes >= 400."""
     mock_httpx_client.get.return_value = mock_response(status_code=500)
-    api = cpanelapi_no_singleton
+    api = cpanelapi
 
     response = api.make_call("Email", "x")
 
