@@ -10,7 +10,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = ["mcp[cli]>=1.11.0"]
+dependencies = ["mcp[cli]>=1.11.0", "pydantic-settings>=2.10.1"]
 description = "An MCP server to interact with cPanel via API functions to manage email accounts"
 keywords = ["automation", "cpanel", "email account management", "llm", "mcp"]
 license = { text = "MIT" }
@@ -20,6 +20,7 @@ requires-python = ">=3.10"
 version = "0.2.0"
 
 [project.scripts]
+cpanel-cli = "cpanel_mcp.cli:main"
 cpanel-mcp = "cpanel_mcp.server:main"
 
 [build-system]
