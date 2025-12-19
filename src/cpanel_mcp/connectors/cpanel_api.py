@@ -22,7 +22,6 @@ class CpanelAPI(CpanelConnect):
         )
         self._headers = {
             "Authorization": _auth,
-            "Content-Type": "application/json",
         }
 
     def make_call(
@@ -45,7 +44,8 @@ class CpanelAPI(CpanelConnect):
             params = {}
 
         url = f"{self._base_url}/execute/{module}/{function}"
-
+        print(url)
+        print(params)
         try:
             response = self._client.get(
                 url=url, headers=self._headers, params=params
