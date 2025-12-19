@@ -125,13 +125,13 @@ class CpanelEmail:
 
         return self._api.make_call("Email", "edit_pop_quota", params)
 
-    def change_password(self, email: str, new_password: str) -> dict[str, str]:
+    def change_password(self, email: str, password: str) -> dict[str, str]:
         """Changes the password for a given email account.
 
         Args:
             email (str): The full email address for which to send client
                 settings.
-            new_password (str): The password to change to.
+            password (str): The password to change to.
 
         Returns:
             dict[str, str]: The JSON response from the api.
@@ -141,7 +141,7 @@ class CpanelEmail:
         params: Params = {
             "email": username,
             "domain": domain,
-            "password": new_password,
+            "password": password,
         }
 
         return self._api.make_call("Email", "passwd_pop", params)

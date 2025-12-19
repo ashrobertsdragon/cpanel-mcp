@@ -16,7 +16,7 @@ def run_mcp(connector: Connector):
     """
     mcp = FastMCP("cPanel Email Management")
     api = CpanelEmail(connector)
-    for tool in api.tools():
+    for tool in api.tools:
         mcp.add_tool(tool)
     mcp.run()
 
@@ -26,9 +26,9 @@ def main() -> None:
     if len(sys.argv) < 2:
         raise ValueError("No connector specified")
     connector = sys.argv[1]
-    if connector not in Connector.__members__:
+    if connector.upper() not in Connector.__members__:
         raise ValueError("Invalid connector specified")
-    run_mcp(Connector[connector])
+    run_mcp(Connector[connector.upper()])
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 import argparse
+import inspect
 
 from cpanel_mcp.connector import Connector
 from cpanel_mcp.cpanel_email import CpanelEmail
@@ -13,7 +14,7 @@ def create_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser: The populated argument parser.
     """
     parser = argparse.ArgumentParser(
-        "cPanel mail tools", description="CLI for cPanel-MCP"
+        "cpanel-cli", description="CLI for cPanel-MCP"
     )
     parser.add_argument(
         "connector", help="Connector to use", choices=["api", "ssh"]
@@ -21,7 +22,8 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument("--domain", help="Domain name")
     parser.add_argument("--email", help="Email address")
     parser.add_argument("--password", help="Email password")
-    parser.add_argument("--quota", help="Email quota")
+    parser.add_argument("--quota", help="Email quota", default=0, type=int)
+    parser.add_argument("--destination", help="Forwarder destination")
 
     command = parser.add_mutually_exclusive_group(required=True)
     command.add_argument(
@@ -78,6 +80,7 @@ def create_parser() -> argparse.ArgumentParser:
         "--delete-forwarder",
         action="store_const",
         const="delete_email_forwarder",
+        dest="command",
     )
     command.add_argument(
         "--list-forwarders",
@@ -97,10 +100,11 @@ def main() -> None:
 
     tool = getattr(api, args.command)
 
+    sig = inspect.signature(tool)
     kwargs = {
         name: getattr(args, name)
-        for name in tool.__code__.co_varnames
+        for name in sig.parameters
         if hasattr(args, name)
     }
 
-    tool(**kwargs)
+    print(tool(**kwargs))
